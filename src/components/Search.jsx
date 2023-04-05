@@ -8,6 +8,7 @@ import {
   doc,
   updateDoc,
   getDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { AuthContext } from "../context/AuthContext";
@@ -47,7 +48,7 @@ const Search = () => {
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
 
-      if (res.exists()) {
+      if (!res.exists()) {
         await setDoc(doc(db, "chats", combinedId), {
           messages: [],
         });
@@ -59,6 +60,7 @@ const Search = () => {
             displayName: user.displayName,
             photoURL: user.photoURL,
           },
+          [combinedId + ".date"]: serverTimestamp(),
         });
         await updateDoc(doc(db, "userChats", user.uid), {
           [combinedId + "userInfo"]: {
@@ -66,6 +68,7 @@ const Search = () => {
             displayName: currentUser.displayName,
             photoURL: currentUser.photoURL,
           },
+          [combinedId + ".date"]: serverTimestamp(),
         });
       }
     } catch (err) {}
@@ -79,9 +82,9 @@ const Search = () => {
         <input
           type="text"
           placeholder="Search users.."
+          onKeyDown={handleKey}
           onChange={(e) => setUsername(e.target.value)}
           value={username}
-          onKeyDown={handleKey}
         />
       </div>
       {err && <span>User not found!</span>}
