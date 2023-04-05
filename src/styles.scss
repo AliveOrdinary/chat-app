@@ -52,6 +52,7 @@
         padding: 10px;
         border: none;
         border-bottom: 1px solid #0059ff;
+        outline: none;
       }
 
       button {
@@ -70,6 +71,7 @@
         color: #5686ff;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
       }
     }
     p {
